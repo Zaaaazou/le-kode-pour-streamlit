@@ -1,5 +1,7 @@
 import streamlit as st
 import tensorflow as tf
+import PIL
+import cv2
 print(tf.__version__)
 
 import IPython.display as display
@@ -117,8 +119,18 @@ def run_style_transform(style_bottleneck, preprocessed_content_image):
 # Stylize the content image using the style bottleneck.
 stylized_image = run_style_transform(style_bottleneck, preprocessed_content_image)
 
+st.image(stylized_image)
+
 # Visualize the output.
+#imshow(stylized_image, 'Stylized Image')
+#cv2.imwrite('leac1bg.png', stylized_image) 
+
+# Visualize the output.
+
+
 imshow(stylized_image, 'Stylized Image')
+
+
 
 # Calculate style bottleneck of the content image.
 style_bottleneck_content = run_style_predict(
