@@ -15,15 +15,6 @@ import numpy as np
 import time
 import functools
 
-st.write('# Image stylization')
-image_to_style=st.text_input("Image to style")
-chosen_style=st.text_input("Chosen style")
-content_path = tf.keras.utils.get_file('user_image_input.jpg',image_to_style)
-style_path = tf.keras.utils.get_file('user_style_input.jpg',chosen_style)
-
-style_predict_path = tf.keras.utils.get_file('style_predict.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/prediction/1?lite-format=tflite')
-style_transform_path = tf.keras.utils.get_file('style_transform.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/transfer/1?lite-format=tflite')
-
 # Function to load an image from a file, and add a batch dimension.
 def load_img(path_to_img):
   img = tf.io.read_file(path_to_img)
@@ -47,18 +38,6 @@ def preprocess_image(image, target_dim):
 
   return image
 
-# Load the input images.
-content_image = load_img(content_path)
-style_image = load_img(style_path)
-
-# Preprocess the input images.
-preprocessed_content_image = preprocess_image(content_image, 384)
-preprocessed_style_image = preprocess_image(style_image, 256)
-
-print('Style Image Shape:', preprocessed_style_image.shape)
-print('Content Image Shape:', preprocessed_content_image.shape)
-
-
 def imshow(image, title=None):
   if len(image.shape) > 3:
     image = tf.squeeze(image, axis=0)
@@ -66,12 +45,6 @@ def imshow(image, title=None):
   plt.imshow(image)
   if title:
     plt.title(title)
-
-plt.subplot(1, 2, 1)
-imshow(preprocessed_content_image, 'Content Image')
-
-plt.subplot(1, 2, 2)
-imshow(preprocessed_style_image, 'Style Image')
 
 # Function to run style prediction on preprocessed style image.
 def run_style_predict(preprocessed_style_image):
@@ -90,10 +63,6 @@ def run_style_predict(preprocessed_style_image):
       )()
 
   return style_bottleneck
-
-# Calculate style bottleneck for the preprocessed style image.
-style_bottleneck = run_style_predict(preprocessed_style_image)
-print('Style Bottleneck Shape:', style_bottleneck.shape)
 
 # Run style transform on preprocessed style image
 def run_style_transform(style_bottleneck, preprocessed_content_image):
@@ -116,41 +85,88 @@ def run_style_transform(style_bottleneck, preprocessed_content_image):
 
   return stylized_image
 
-# Stylize the content image using the style bottleneck.
-stylized_image = run_style_transform(style_bottleneck, preprocessed_content_image)
+st.write('# Image stylization')
+with st.form("my_form"):
+  st.write("Inside the form")
+  image_to_style=st.text_input("Image to style")
+  chosen_style=st.text_input("Chosen style")
 
-st.image(stylized_image)
+   # Every form must have a submit button.
+  submitted = st.form_submit_button("Submit")
+  if submitted:
+    st.write("image", image_to_style, "style", chosen_style)
 
-# Visualize the output.
-#imshow(stylized_image, 'Stylized Image')
-#cv2.imwrite('leac1bg.png', stylized_image) 
+    content_path = tf.keras.utils.get_file('user_image_input.jpg',image_to_style)
+    style_path = tf.keras.utils.get_file('user_style_input.jpg',chosen_style)
 
-# Visualize the output.
-
-
-imshow(stylized_image, 'Stylized Image')
-
-
-
-# Calculate style bottleneck of the content image.
-style_bottleneck_content = run_style_predict(
-    preprocess_image(content_image, 256)
-    )
+    style_predict_path = tf.keras.utils.get_file('style_predict.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/prediction/1?lite-format=tflite')
+    style_transform_path = tf.keras.utils.get_file('style_transform.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/transfer/1?lite-format=tflite')
 
 
-# Define content blending ratio between [0..1].
-# 0.0: 0% style extracts from content image.
-# 1.0: 100% style extracted from content image.
-content_blending_ratio = 0.5 #@param {type:"slider", min:0, max:1, step:0.01}
 
-# Blend the style bottleneck of style image and content image
-style_bottleneck_blended = content_blending_ratio * style_bottleneck_content \
-                           + (1 - content_blending_ratio) * style_bottleneck
+    # Load the input images.
+    content_image = load_img(content_path)
+    style_image = load_img(style_path)
 
-# Stylize the content image using the style bottleneck.
-stylized_image_blended = run_style_transform(style_bottleneck_blended,
-                                             preprocessed_content_image)
+    # Preprocess the input images.
+    preprocessed_content_image = preprocess_image(content_image, 384)
+    preprocessed_style_image = preprocess_image(style_image, 256)
 
-# Visualize the output.
-imshow(stylized_image_blended, 'Blended Stylized Image')
+    print('Style Image Shape:', preprocessed_style_image.shape)
+    print('Content Image Shape:', preprocessed_content_image.shape)
+
+
+
+
+    plt.subplot(1, 2, 1)
+    imshow(preprocessed_content_image, 'Content Image')
+
+    plt.subplot(1, 2, 2)
+    imshow(preprocessed_style_image, 'Style Image')
+
+
+
+    # Calculate style bottleneck for the preprocessed style image.
+    style_bottleneck = run_style_predict(preprocessed_style_image)
+    print('Style Bottleneck Shape:', style_bottleneck.shape)
+
+
+
+    # Stylize the content image using the style bottleneck.
+    stylized_image = run_style_transform(style_bottleneck, preprocessed_content_image)
+
+    st.image(stylized_image)
+
+    # Visualize the output.
+    #imshow(stylized_image, 'Stylized Image')
+    #cv2.imwrite('leac1bg.png', stylized_image) 
+
+    # Visualize the output.
+
+
+    imshow(stylized_image, 'Stylized Image')
+
+
+
+    # Calculate style bottleneck of the content image.
+    style_bottleneck_content = run_style_predict(
+        preprocess_image(content_image, 256)
+        )
+
+
+    # Define content blending ratio between [0..1].
+    # 0.0: 0% style extracts from content image.
+    # 1.0: 100% style extracted from content image.
+    content_blending_ratio = 0.5 #@param {type:"slider", min:0, max:1, step:0.01}
+
+    # Blend the style bottleneck of style image and content image
+    style_bottleneck_blended = content_blending_ratio * style_bottleneck_content \
+                              + (1 - content_blending_ratio) * style_bottleneck
+
+    # Stylize the content image using the style bottleneck.
+    stylized_image_blended = run_style_transform(style_bottleneck_blended,
+                                                preprocessed_content_image)
+
+    # Visualize the output.
+    imshow(stylized_image_blended, 'Blended Stylized Image')
 
