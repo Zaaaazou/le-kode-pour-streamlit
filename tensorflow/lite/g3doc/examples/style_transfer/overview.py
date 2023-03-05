@@ -1,7 +1,8 @@
 import streamlit as st
 import tensorflow as tf
 import PIL
-print(tf.__version__)
+print(
+  tf.__version__)
 
 import IPython.display as display
 
@@ -17,8 +18,8 @@ import functools
 st.write('# Image stylization')
 image_to_style=st.text_input("Image to style")
 chosen_style=st.text_input("Chosen style")
-content_path = tf.keras.utils.get_file('belfry.jpg','https://storage.googleapis.com/khanhlvg-public.appspot.com/arbitrary-style-transfer/belfry-2611573_1280.jpg')
-style_path = tf.keras.utils.get_file('style23.jpg','https://storage.googleapis.com/khanhlvg-public.appspot.com/arbitrary-style-transfer/style23.jpg')
+content_path = tf.keras.utils.get_file('belfry.jpg',image_to_style)
+style_path = tf.keras.utils.get_file('style23.jpg',chosen_style)
 
 style_predict_path = tf.keras.utils.get_file('style_predict.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/prediction/1?lite-format=tflite')
 style_transform_path = tf.keras.utils.get_file('style_transform.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/transfer/1?lite-format=tflite')
