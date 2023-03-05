@@ -13,7 +13,7 @@ import numpy as np
 import time
 import functools
 
-st.write('# Avocado Prices')
+st.write('# Image stylization')
 image_to_style=st.text_input("Image to style")
 chosen_style=st.text_input("Chosen style")
 content_path = tf.keras.utils.get_file('belfry.jpg','https://storage.googleapis.com/khanhlvg-public.appspot.com/arbitrary-style-transfer/belfry-2611573_1280.jpg')
