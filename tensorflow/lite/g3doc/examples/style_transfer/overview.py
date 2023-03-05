@@ -18,8 +18,8 @@ import functools
 st.write('# Image stylization')
 image_to_style=st.text_input("Image to style")
 chosen_style=st.text_input("Chosen style")
-content_path = tf.keras.utils.get_file('belfry.jpg',image_to_style)
-style_path = tf.keras.utils.get_file('style23.jpg',chosen_style)
+content_path = tf.keras.utils.get_file('user_image_input.jpg',image_to_style)
+style_path = tf.keras.utils.get_file('user_style_input.jpg',chosen_style)
 
 style_predict_path = tf.keras.utils.get_file('style_predict.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/prediction/1?lite-format=tflite')
 style_transform_path = tf.keras.utils.get_file('style_transform.tflite', 'https://tfhub.dev/google/lite-model/magenta/arbitrary-image-stylization-v1-256/int8/transfer/1?lite-format=tflite')
