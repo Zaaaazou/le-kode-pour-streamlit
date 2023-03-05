@@ -14,7 +14,8 @@ import time
 import functools
 
 st.write('# Avocado Prices')
-
+image_to_style=st.text_input("Image to style")
+chosen_style=st.text_input("Chosen style")
 content_path = tf.keras.utils.get_file('belfry.jpg','https://storage.googleapis.com/khanhlvg-public.appspot.com/arbitrary-style-transfer/belfry-2611573_1280.jpg')
 style_path = tf.keras.utils.get_file('style23.jpg','https://storage.googleapis.com/khanhlvg-public.appspot.com/arbitrary-style-transfer/style23.jpg')
 
