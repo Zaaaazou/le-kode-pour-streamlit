@@ -1,7 +1,6 @@
 import streamlit as st
 import tensorflow as tf
 import PIL
-import cv2
 print(tf.__version__)
 
 import IPython.display as display
